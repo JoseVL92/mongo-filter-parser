@@ -1,7 +1,7 @@
 from typing import Dict, List, Union
-from pydantic import BaseModel
 from urllib.parse import parse_qs
 
+from .types import BaseModelProtocol
 from .operators import COMPARISON_OPERATORS, LOGICAL_OPERATORS
 from .parser import BindingParser, LogicalExpression
 from .value_parser import parse_value
@@ -9,8 +9,8 @@ from .value_parser import parse_value
 
 class MongoFilterBuilder:
     def __init__(self,
-                 query_params: Union[str, Dict],
-                 exclude_model: BaseModel = None,
+                 query_params: Union[str, Dict[str, Any]],
+                 exclude_model: Union[BaseModelProtocol, None] = None,
                  exclude_fields: List[str] = None):
         self.query_params = self._normalize_query_params(query_params)
         self.excluded_fields = self._get_excluded_fields(exclude_model, exclude_fields)

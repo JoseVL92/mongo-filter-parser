@@ -1,23 +1,21 @@
-from pydantic import BaseModel
-from typing import Union, List
+from typing import Dict, List, Union, Any
+
+from .types import BaseModelProtocol
 from .filter_builder import MongoFilterBuilder
 
-
-def build_mongo_filter(query_params: Union[str, dict],
-                       exclude_model: BaseModel = None,
-                       exclude_fields: List[str] = None) -> dict:
+def build_mongo_filter(query_params: Union[str, Dict[str, Any]],
+                      exclude_model: Union[BaseModelProtocol, None] = None,
+                      exclude_fields: List[str] = None) -> Dict[str, Any]:
     """
     Converts URL query string (or FastAPI QueryParams dict) into a MongoDB filter query.
-    Supports logical operators through the __binding__ parameter.
-
-    Example:
-        query = "price__lte=7.8&created_at__lt=2024-05-08&is_verified=false&has_evolved=true&__binding__=((created_at__lt|is_verified)+has_evolved)"
-        filter = build_mongo_filter(query)
-
-    The binding expression supports:
-        - Parentheses for grouping
-        - + for AND operations
-        - | for OR operations
+    
+    Args:
+        query_params: URL query string or dictionary of parameters
+        exclude_model: Optional Pydantic-like model for field exclusion
+        exclude_fields: Optional list of field names to exclude
+        
+    Returns:
+        MongoDB filter dictionary
     """
     builder = MongoFilterBuilder(query_params, exclude_model, exclude_fields)
     return builder.build()
