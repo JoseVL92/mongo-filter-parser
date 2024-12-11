@@ -16,6 +16,12 @@ def build_mongo_filter(query_params: Union[str, Dict[str, Any]],
         
     Returns:
         MongoDB filter dictionary
+
+    Raises:
+        MongoFilterError: Base exception for all mongo_filter_parser errors
+        ParserError: When there's an error parsing the binding expression
+        OperatorError: When an invalid or unsupported operator is used
+        ValueParsingError: When there's an error parsing a value
     """
     builder = MongoFilterBuilder(query_params, exclude_model, exclude_fields)
     return builder.build()

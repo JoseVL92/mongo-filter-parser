@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 from typing import Any, Dict, Pattern, Union
 
+from .exceptions import ValueParsingError
 
 def _date_parse(date: str) -> Union[datetime, str]:
     try:
@@ -51,4 +52,4 @@ def parse_value(value: str) -> Any:
                     return cast(value)
         return value
     except (ValueError, json.JSONDecodeError):
-        return value
+        raise ValueParsingError(f"Failed to parse value '{value}': {str(e)}")

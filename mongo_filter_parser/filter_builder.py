@@ -1,6 +1,7 @@
 from typing import Dict, List, Union
 from urllib.parse import parse_qs
 
+from .exceptions import OperatorError
 from .types import BaseModelProtocol
 from .operators import COMPARISON_OPERATORS, LOGICAL_OPERATORS
 from .parser import BindingParser, LogicalExpression
@@ -39,7 +40,7 @@ class MongoFilterBuilder:
                         mongo_filter[field] = {}
                     mongo_filter[field][COMPARISON_OPERATORS[op]] = parse_value(value)
                 else:
-                    raise ValueError(f"Unsupported operator: {op}")
+                    raise OperatorError(f"Unsupported operator: {op}")
             else:
                 mongo_filter[key] = parse_value(value)
 
@@ -56,7 +57,7 @@ class MongoFilterBuilder:
         if isinstance(expr, str):
             # It's a field name
             if expr not in self.query_params:
-                raise ValueError(f"Field '{expr}' referenced in binding but not in query params")
+                raise OperatorError(f"Field '{expr}' referenced in binding but not in query params")
             return self._build_field_filter(expr)
 
         # It's a logical expression

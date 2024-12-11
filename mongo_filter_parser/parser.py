@@ -1,6 +1,8 @@
 from typing import Any, List
 from dataclasses import dataclass
 
+from .exceptions import ParserError
+
 
 @dataclass
 class LogicalExpression:
@@ -56,7 +58,7 @@ class BindingParser:
             self._skip_whitespace()
 
             if self.pos >= len(self.binding_str) or self.binding_str[self.pos] != ')':
-                raise ValueError("Missing closing parenthesis")
+                raise ParserError("Missing closing parenthesis")
             self.pos += 1  # Skip closing parenthesis
             return expr
 
@@ -68,7 +70,7 @@ class BindingParser:
         while self.pos < len(self.binding_str) and self.binding_str[self.pos] not in ('+', '|', ')', ' '):
             self.pos += 1
         if start == self.pos:
-            raise ValueError("Expected field name")
+            raise ParserError("Expected field name")
         return self.binding_str[start:self.pos]
 
     def _skip_whitespace(self):
