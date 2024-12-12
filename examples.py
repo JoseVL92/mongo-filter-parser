@@ -1,5 +1,5 @@
+"""Examples demonstrating mongo_filter usage."""
 from mongo_filter_parser.filter_builder import MongoFilterBuilder
-
 
 def print_filter(query_params: dict, binding: str) -> None:
     """Helper function to demonstrate filter building with different bindings."""
@@ -18,7 +18,9 @@ def run_examples():
         'has_evolved': 'true',
         'evolution_rate__lt': '12',
         'email__regex': 'user@',
-        'name__regex': 'john'
+        'name__regex': 'john',
+        'price__gt': '8',
+        'price__lte': '4'
     }
 
     # Example 1: Simple OR with AND
@@ -43,6 +45,12 @@ def run_examples():
     print_filter(
         base_params,
         '(created_at__lt|is_verified)+(has_evolved|evolution_rate__lt)'
+    )
+
+    # Example 5: Multiple conditions on same field with OR
+    print_filter(
+        base_params,
+        'price__gt|price__lte|is_verified'
     )
 
 if __name__ == '__main__':
