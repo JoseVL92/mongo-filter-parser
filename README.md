@@ -10,11 +10,13 @@ A Python utility for converting URL query parameters into MongoDB filter queries
 - Case-insensitive regex matching
 - Field exclusion support using Pydantic models
 - URL-safe logical operators (`+` for AND, `|` for OR)
+- Smart flattening of nested logical expressions
+- Multiple conditions on the same field
 
-## Installation (still not deployed)
+## Installation
 
 ```bash
-pip install mongo_filter_parser
+pip install mongo-filter-parser
 ```
 
 ## Quick Start
@@ -84,14 +86,18 @@ query = "email__regex=user@example"
 
 ```python
 # OR operation
-query = "status=inactive&last_activity__lt=2020-01-01&__binding__=status|last_activity__lt"
-# Result: {"$or": [{"status": "active"}, {"last_activity": {"$lt": "2020-01-01"}}]}
+query = "status=active|status=pending&__binding__=status|status"
+# Result: {"$or": [{"status": "active"}, {"status": "pending"}]}
 
 # AND operation
-query = "price__lte=100&quantity__gte=10&__binding__=price__lte+quantity__gte"
+query = "price__lte=100+quantity__gte=10&__binding__=price__lte+quantity__gte"
 # Result: {"$and": [{"price": {"$lte": 100}}, {"quantity": {"$gte": 10}}]}
 
-# Complex grouping
+# Multiple conditions on same field
+query = "price__gt=8&price__lte=4&is_verified=true&__binding__=price__gt|price__lte|is_verified"
+# Result: {"$or": [{"price": {"$gt": 8}}, {"price": {"$lte": 4}}, {"is_verified": true}]}
+
+# Complex grouping with flattened structure
 query = "created_at__lt=2024-05-08&is_verified=false&has_evolved=true&__binding__=((created_at__lt|is_verified)+has_evolved)"
 # Result: {"$and": [{"$or": [{"created_at": {"$lt": "2024-05-08"}}, {"is_verified": false}]}, {"has_evolved": true}]}
 ```
@@ -100,7 +106,7 @@ query = "created_at__lt=2024-05-08&is_verified=false&has_evolved=true&__binding_
 
 ```python
 from pydantic import BaseModel
-from mongo_filter import build_mongo_filter
+from mongo_filter_parser import build_mongo_filter
 
 class PaginationParams(BaseModel):
     page: int
