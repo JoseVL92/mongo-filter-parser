@@ -6,6 +6,7 @@ from .operators import LOGICAL_OPERATORS
 from .parser import LogicalExpression
 from .field_builder import FieldBuilder
 
+
 class LogicalBuilder:
     """Builds MongoDB filters with logical operators."""
 

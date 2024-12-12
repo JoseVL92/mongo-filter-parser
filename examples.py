@@ -1,6 +1,7 @@
 """Examples demonstrating mongo_filter usage."""
 from mongo_filter_parser.filter_builder import MongoFilterBuilder
 
+
 def print_filter(query_params: dict, binding: str) -> None:
     """Helper function to demonstrate filter building with different bindings."""
     params = query_params.copy()
@@ -9,6 +10,7 @@ def print_filter(query_params: dict, binding: str) -> None:
     result = builder.build()
     print(f"\nBinding: {binding}")
     print("MongoDB Filter:", result)
+
 
 def run_examples():
     # Sample query parameters

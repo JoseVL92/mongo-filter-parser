@@ -5,6 +5,7 @@ from typing import Any, Dict, Pattern, Union
 
 from .exceptions import ValueParsingError
 
+
 def _date_parse(date: str) -> Union[datetime, str]:
     try:
         return datetime.fromisoformat(date)
@@ -51,5 +52,5 @@ def parse_value(value: str) -> Any:
                 if regex == value.lower():
                     return cast(value)
         return value
-    except (ValueError, json.JSONDecodeError):
+    except (ValueError, json.JSONDecodeError) as e:
         raise ValueParsingError(f"Failed to parse value '{value}': {str(e)}")

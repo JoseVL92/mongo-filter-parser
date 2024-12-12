@@ -5,6 +5,7 @@ from .exceptions import OperatorError
 from .operators import COMPARISON_OPERATORS
 from .value_parser import parse_value
 
+
 class FieldBuilder:
     """Builds MongoDB filters for individual fields."""
 
